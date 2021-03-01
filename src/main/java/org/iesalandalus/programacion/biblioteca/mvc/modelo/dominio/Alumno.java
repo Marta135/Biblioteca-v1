@@ -5,7 +5,7 @@ public class Alumno {
 	
 	/*********ATRIBUTOS*********/
 	
-	private static final String ER_NOMBRE = "[a-zA-ZÁáÉéÍíÓóÚú]+[\\s]+[a-zA-ZÁáÉéÍíÓóÚú\\s]*";
+	private static final String ER_NOMBRE = "[a-zA-ZÁáÉéÍíÓóÚúÑñ]+[\\s]+[a-zA-ZÁáÉéÍíÓóÚúÑñ\\s]*";
 	private static final String ER_CORREO = ".+@[a-zA-Z]+\\.[a-zA-Z]+";
 	private String nombre;
 	private String correo;

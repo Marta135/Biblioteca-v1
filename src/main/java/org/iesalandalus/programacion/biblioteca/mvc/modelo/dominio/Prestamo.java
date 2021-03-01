@@ -170,7 +170,7 @@ public class Prestamo {
 		if (fechaDevolucion.isAfter(LocalDate.now())) {
 			throw new IllegalArgumentException("ERROR: La fecha de devolución no puede ser futura.");
 		}
-		if(fechaDevolucion.isBefore(LocalDate.now()) || fechaDevolucion.isEqual(fechaPrestamo)) {
+		if(fechaDevolucion.isBefore(fechaPrestamo) || fechaDevolucion.isEqual(fechaPrestamo)) {
 			throw new IllegalArgumentException("ERROR: La fecha de devolución debe ser posterior a la fecha de préstamo.");
 		}
 		this.fechaDevolucion = fechaDevolucion;
