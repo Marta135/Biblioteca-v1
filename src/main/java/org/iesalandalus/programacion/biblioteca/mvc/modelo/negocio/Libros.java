@@ -1,5 +1,8 @@
 package org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Libro;
@@ -8,9 +11,7 @@ public class Libros {
 
 	/*********ATRIBUTOS*********/
 	
-	private int capacidad;
-	private int tamano;
-	private Libro[] coleccionLibros;
+	private List<Libro> coleccionLibros;
 	
 	
 	/*******CONSTRUCTORES*******/
@@ -19,20 +20,15 @@ public class Libros {
 	 * Constructor con parámetros.
 	 * @param capacidad
 	 */
-	public Libros(int capacidad) throws NullPointerException, IllegalArgumentException {
-		if(capacidad <= 0) {
-			throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
-		}
-		this.capacidad = capacidad;
-		coleccionLibros = new Libro[capacidad];
-		this.tamano = 0;
+	public Libros() throws NullPointerException, IllegalArgumentException {
+		coleccionLibros = new ArrayList<>();
 	}
 	
 	/**
 	 * Método que devuelve una copia profunda de la colección.
 	 * @return copiaProfundaLibros
 	 */
-	public Libro[] get() throws NullPointerException, IllegalArgumentException {
+	public List<Libro> get() throws NullPointerException, IllegalArgumentException {
 		return copiaProfundaLibros();
 	}
 	
@@ -40,34 +36,24 @@ public class Libros {
 	 * Método que devuelve una copia de la colección de libros.
 	 * @return copiaLibros
 	 */
-	private Libro[] copiaProfundaLibros() throws NullPointerException, IllegalArgumentException {
-		Libro[] copiaLibros = new Libro[capacidad];
-		for (int i = 0; !tamanoSuperado(i); i++) {
-			copiaLibros[i] = new Libro(coleccionLibros[i]);
+	private List<Libro> copiaProfundaLibros() throws NullPointerException, IllegalArgumentException {
+		List<Libro> copiaLibros = new ArrayList<>();
+		for (Libro libro : coleccionLibros) {
+			copiaLibros.add(new Libro(libro));
 		}
 		return copiaLibros;
 	}
 	
-	
-	/*********GETTERS Y SETTERS**********/
 	
 	/**
 	 * Método que devuelve el tamaño.
 	 * @return tamano
 	 */
 	public int getTamano() {
-		return tamano;
+		return coleccionLibros.size();
 	}
 	
-	/**
-	 * Método que devuelve la capacidad.
-	 * @return capacidad
-	 */
-	public int getCapacidad() {
-		return capacidad;
-	}
-	
-	
+
 	/********OTROS MÉTODOS********/
 	
 	/**
@@ -79,53 +65,14 @@ public class Libros {
 		if (libro == null) {
 			throw new NullPointerException("ERROR: No se puede insertar un libro nulo.");
 		}
-		int indice = buscarIndice(libro);
-		if (capacidadSuperada(indice)) {
-			throw new OperationNotSupportedException("ERROR: No se aceptan más libros.");
-		}
-		if (tamanoSuperado(indice)) {
-			coleccionLibros[indice] = new Libro(libro);
-			tamano++;
+		int indice = coleccionLibros.indexOf(libro);
+		if (indice == -1) {
+			coleccionLibros.add(new Libro(libro));
 		} else {
 			throw new OperationNotSupportedException("ERROR: Ya existe un libro con ese título y autor.");
 		}
 	}
 	
-	/**
-	 * Método que busca la posicion de un libro en la colección.
-	 * @param libro
-	 * @return indice
-	 */
-	private int buscarIndice(Libro libro) {
-		int indice = 0;
-		boolean libroEncontrado = false;
-		while (!tamanoSuperado(indice) && !libroEncontrado) {
-			if (coleccionLibros[indice].equals(libro)) {
-				libroEncontrado = true;
-			} else {
-				indice++;
-			}
-		}
-		return indice;
-	}
-	
-	/**
-	 * Método que devuelve true o false en función de si se ha superado el tamaño o no.
-	 * @param indice
-	 * @return true o false
-	 */
-	private boolean tamanoSuperado(int indice) {
-		return indice >= tamano;
-	}
-	
-	/**
-	 * Método que devuelve true o false en función de si se ha superado la capacidad.
-	 * @param indice
-	 * @return true o false
-	 */
-	private boolean capacidadSuperada(int indice) {
-		return indice >= capacidad;
-	}
 	
 	/**
 	 * Método que permite buscar un libro en la colección.
@@ -136,11 +83,11 @@ public class Libros {
 		if (libro == null) {
 			throw new IllegalArgumentException("ERROR: No se puede buscar un libro nulo.");
 		}
-		int indice = buscarIndice(libro);
-		if (tamanoSuperado(indice)) {
+		int indice = coleccionLibros.indexOf(libro);
+		if (indice == -1) {
 			return null;
 		} else {
-			return new Libro(coleccionLibros[indice]);
+			return new Libro(coleccionLibros.get(indice));
 		}
 	}
 	
@@ -153,25 +100,12 @@ public class Libros {
 		if (libro == null) {
 			throw new IllegalArgumentException("ERROR: No se puede borrar un libro nulo.");
 		}
-		int indice = buscarIndice(libro);
-		if (tamanoSuperado(indice)) {
+		int indice = coleccionLibros.indexOf(libro);
+		if (indice == -1) {
 			throw new OperationNotSupportedException("ERROR: No existe ningún libro con ese título y autor.");
 		} else {
-			desplazaUnaPosicionHaciaIzquierda(indice);
+			coleccionLibros.remove(indice);
 		}
-	}
-	
-	/**
-	 * Método para desplazar una posición hacia la izquierda en la colección.
-	 * @param indice
-	 */
-	private void desplazaUnaPosicionHaciaIzquierda(int indice) {
-		int i;
-		for (i = indice; !tamanoSuperado(i); i++) {
-			coleccionLibros[i] = coleccionLibros[i+1];
-		}
-		coleccionLibros[i] = null;
-		tamano--;
 	}
 
 }
