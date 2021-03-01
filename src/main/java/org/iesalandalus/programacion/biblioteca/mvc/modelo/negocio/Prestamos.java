@@ -2,6 +2,7 @@ package org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
@@ -20,19 +21,27 @@ public class Prestamos {
 	/*******CONSTRUCTORES*******/
 	
 	/**
-	 * Constructor con parámetros.
-	 * @param capacidad
+	 * Constructor sin parámetros.
 	 */
 	public Prestamos() throws NullPointerException, IllegalArgumentException {
 		coleccionPrestamos = new ArrayList<>();
 	}
 
+	
 	/**
-	 * Método que devuelve una copia profunda de la colección.
-	 * @return copiaProfundaPrestamos
+	 * Método que devuelve una copia de la colección.
+	 * @return prestamosOrdenados
 	 */
 	public List<Prestamo> get() throws NullPointerException, IllegalArgumentException {
-		return copiaProfundaPrestamos();
+		List<Prestamo> prestamosOrdenados = copiaProfundaPrestamos();
+		Comparator<Alumno> comparadorAlumno = Comparator.comparing(Alumno::getNombre);
+		Comparator<Libro> comparadorLibro = Comparator.comparing(Libro::getTitulo).thenComparing(Libro::getAutor);
+		Comparator<Prestamo> comparadorPrestamo = Comparator.comparing(Prestamo::getFechaPrestamo)
+				.thenComparing(Prestamo::getAlumno, comparadorAlumno)
+				.thenComparing(Prestamo::getLibro, comparadorLibro);
+		prestamosOrdenados.sort(comparadorPrestamo);
+		
+		return prestamosOrdenados;
 	}
 	
 	/**
@@ -48,8 +57,8 @@ public class Prestamos {
 	}
 	
 	/**
-	 *  Método que devuelve el tamaño.
-	 * @return tamano
+	 *  Método que devuelve el tamaño de la colección.
+	 * @return coleccionPrestamos.size()
 	 */
 	public int getTamano() {
 		return coleccionPrestamos.size();
@@ -71,13 +80,18 @@ public class Prestamos {
 				prestamosAlumno.add(new Prestamo(prestamo));
 			}
 		}
+		Comparator<Libro> comparadorLibro = Comparator.comparing(Libro::getTitulo).thenComparing(Libro::getAutor);
+		Comparator<Prestamo> comparadorPrestamo = Comparator.comparing(Prestamo::getFechaPrestamo)
+				.thenComparing(Prestamo::getLibro, comparadorLibro);
+		prestamosAlumno.sort(comparadorPrestamo);
+		
 		return prestamosAlumno;
 	}
 	
 	/**
 	 * Método que devuelve los préstamos realizados de un libro.
 	 * @param libro
-	 * @return
+	 * @return prestamosLibro
 	 */
 	public List<Prestamo> get(Libro libro) throws NullPointerException, IllegalArgumentException {
 		if (libro == null) {
@@ -89,6 +103,11 @@ public class Prestamos {
 				prestamosLibro.add(new Prestamo(prestamo));
 			}
 		}
+		Comparator<Alumno> comparadorAlumno = Comparator.comparing(Alumno::getNombre);
+		Comparator<Prestamo> comparadorPrestamo = Comparator.comparing(Prestamo::getFechaPrestamo)
+				.thenComparing(Prestamo::getAlumno, comparadorAlumno);
+		prestamosLibro.sort(comparadorPrestamo);
+		
 		return prestamosLibro;
 	}
 	
@@ -107,6 +126,13 @@ public class Prestamos {
 				prestamosFecha.add(new Prestamo(prestamo));
 			}
 		}
+		Comparator<Alumno> comparadorAlumno = Comparator.comparing(Alumno::getNombre);
+		Comparator<Libro> comparadorLibro = Comparator.comparing(Libro::getTitulo).thenComparing(Libro::getAutor);
+		Comparator<Prestamo> comparadorPrestamo = Comparator.comparing(Prestamo::getFechaPrestamo)
+				.thenComparing(Prestamo::getAlumno, comparadorAlumno)
+				.thenComparing(Prestamo::getLibro, comparadorLibro);
+		prestamosFecha.sort(comparadorPrestamo);
+		
 		return prestamosFecha;
 	}
 	
@@ -114,7 +140,7 @@ public class Prestamos {
 	 * Método que devuelve true o false si las fechas de préstamo son iguales o no.
 	 * @param fechaUno
 	 * @param fechaDos
-	 * @return true o false
+	 * @return fechaIgual
 	 */
 	private boolean mismoMes(LocalDate fechaUno, LocalDate fechaDos) {
 		boolean fechaIgual = false;
