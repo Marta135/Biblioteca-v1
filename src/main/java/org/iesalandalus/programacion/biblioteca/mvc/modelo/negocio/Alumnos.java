@@ -1,5 +1,8 @@
 package org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Alumno;
@@ -8,9 +11,7 @@ public class Alumnos {
 
 	/*********ATRIBUTOS*********/
 	
-	private int capacidad;
-	private int tamano;
-	private Alumno[] coleccionAlumnos;
+	private List<Alumno> coleccionAlumnos;
 	
 		
 	/*******CONSTRUCTORES*******/
@@ -19,20 +20,15 @@ public class Alumnos {
 	 * Constructor con parámetros.
 	 * @param capacidad
 	 */
-	public Alumnos (int capacidad) throws NullPointerException, IllegalArgumentException {
-		if(capacidad <= 0) {
-			throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
-		}
-		this.capacidad = capacidad;
-		coleccionAlumnos = new Alumno [capacidad];
-		this.tamano = 0;
+	public Alumnos () throws NullPointerException, IllegalArgumentException {
+		coleccionAlumnos = new ArrayList<>();
 	}
 
 	/**
 	 * Método que devuelve una copia profunda de la colección.
 	 * @return copiaProfundaAlumnos
 	 */
-	public Alumno[] get() throws NullPointerException, IllegalArgumentException {
+	public List<Alumno> get() throws NullPointerException, IllegalArgumentException {
 		return copiaProfundaAlumnos();
 	}
 	
@@ -40,31 +36,21 @@ public class Alumnos {
 	 * Método que devuelve una copia de la colección de alumnos.
 	 * @return copiaAlumnos
 	 */
-	private Alumno[] copiaProfundaAlumnos() throws NullPointerException, IllegalArgumentException {
-		Alumno[] copiaAlumnos = new Alumno[capacidad];
-		for (int i = 0; !tamanoSuperado(i); i++) {
-			copiaAlumnos[i] = new Alumno(coleccionAlumnos[i]);
+	private List<Alumno> copiaProfundaAlumnos() throws NullPointerException, IllegalArgumentException {
+		List<Alumno> copiaAlumnos = new ArrayList<>();
+		for (Alumno alumno : coleccionAlumnos) {
+			copiaAlumnos.add(new Alumno(alumno));
 		}
 		return copiaAlumnos;
 	}
 	
-	
-	/*********GETTERS Y SETTERS**********/
 	
 	/**
 	 *  Método que devuelve el tamaño.
 	 * @return tamano
 	 */
 	public int getTamano() {
-		return tamano;
-	}
-	
-	/**
-	 *  Método que devuelve la capacidad.
-	 * @return capacidad
-	 */
-	public int getCapacidad() {
-		return capacidad;
+		return coleccionAlumnos.size();
 	}
 	
 		
@@ -79,55 +65,14 @@ public class Alumnos {
 		if (alumno == null) {
 			throw new NullPointerException("ERROR: No se puede insertar un alumno nulo.");
 		}
-		int indice = buscarIndice(alumno);
-		if (capacidadSuperada(indice)) {
-			throw new OperationNotSupportedException("ERROR: No se aceptan más alumnos.");
-		}
-		if (tamanoSuperado(indice)) {
-			coleccionAlumnos[indice] = new Alumno(alumno);
-			tamano++;
+		int indice = coleccionAlumnos.indexOf(alumno);
+		if (indice == -1) {
+			coleccionAlumnos.add(new Alumno(alumno));
 		} else {
 			throw new OperationNotSupportedException("ERROR: Ya existe un alumno con ese correo.");
 		}
 	}
-	
-	
-	/**
-	 * Método que busca la posicion de un alumno en la colección por su correo.
-	 * @param alumno
-	 * @return indice
-	 */
-	private int buscarIndice(Alumno alumno) {
-		int indice = 0;
-		boolean alumnoEncontrado = false;
-		while (!tamanoSuperado(indice) && !alumnoEncontrado) {
-			if (coleccionAlumnos[indice].getCorreo().equals(alumno.getCorreo())) {
-				alumnoEncontrado = true;
-			} else {
-				indice++;
-			}
-		}
-		return indice;
-	}
-	
-	/**
-	 * Método que devuelve true o false en función de si se ha superado el tamaño o no.
-	 * @param indice
-	 * @return true o false
-	 */
-	private boolean tamanoSuperado(int indice) {
-		return indice >= tamano;
-	}
-	
-	/**
-	 * Método que devuelve true o false en función de si se ha superado la capacidad.
-	 * @param indice
-	 * @return true o false
-	 */
-	private boolean capacidadSuperada(int indice) {
-		return indice >= capacidad;
-	}
-	
+
 	/**
 	 * Método que permite buscar un alumno en la colección.
 	 * @param alumno
@@ -137,11 +82,11 @@ public class Alumnos {
 		if (alumno == null) {
 			throw new IllegalArgumentException("ERROR: No se puede buscar un alumno nulo.");
 		}
-		int indice = buscarIndice(alumno);
-		if (tamanoSuperado(indice)) {
+		int indice = coleccionAlumnos.indexOf(alumno);
+		if (indice == -1) {
 			return null;
 		} else {
-			return new Alumno(coleccionAlumnos[indice]);
+			return new Alumno(coleccionAlumnos.get(indice));
 		}
 	}
 	
@@ -154,24 +99,12 @@ public class Alumnos {
 		if (alumno == null) {
 			throw new IllegalArgumentException("ERROR: No se puede borrar un alumno nulo.");
 		}
-		int indice = buscarIndice(alumno);
-		if (tamanoSuperado(indice)) {
+		int indice = coleccionAlumnos.indexOf(alumno);
+		if (indice == -1) {
 			throw new OperationNotSupportedException("ERROR: No existe ningún alumno con ese correo.");
 		} else {
-			desplazaUnaPosicionHaciaIzquierda(indice);
+			coleccionAlumnos.remove(indice);
 		}
 	}
 	
-	/**
-	 * Método para desplazar una posición hacia la izquierda en la colección.
-	 * @param indice
-	 */
-	private void desplazaUnaPosicionHaciaIzquierda(int indice) {
-		int i;
-		for (i = indice; !tamanoSuperado(i); i++) {
-			coleccionAlumnos[i] = coleccionAlumnos[i+1];
-		}
-		coleccionAlumnos[i] = null;
-		tamano--;
-	}
 }
