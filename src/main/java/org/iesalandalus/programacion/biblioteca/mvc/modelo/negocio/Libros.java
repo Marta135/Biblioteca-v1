@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
@@ -17,19 +18,21 @@ public class Libros {
 	/*******CONSTRUCTORES*******/
 	
 	/**
-	 * Constructor con parámetros.
-	 * @param capacidad
+	 * Constructor sin parámetros.
 	 */
 	public Libros() throws NullPointerException, IllegalArgumentException {
 		coleccionLibros = new ArrayList<>();
 	}
 	
+	
 	/**
-	 * Método que devuelve una copia profunda de la colección.
-	 * @return copiaProfundaLibros
+	 * Método que devuelve una copia de la colección.
+	 * @return librosOrdenados
 	 */
 	public List<Libro> get() throws NullPointerException, IllegalArgumentException {
-		return copiaProfundaLibros();
+		List<Libro> librosOrdenados = copiaProfundaLibros();
+		librosOrdenados.sort(Comparator.comparing(Libro::getTitulo).thenComparing(Libro::getAutor));
+		return librosOrdenados;
 	}
 	
 	/**
@@ -46,8 +49,8 @@ public class Libros {
 	
 	
 	/**
-	 * Método que devuelve el tamaño.
-	 * @return tamano
+	 * Método que devuelve el tamaño de la colección.
+	 * @return coleccionLibros.size
 	 */
 	public int getTamano() {
 		return coleccionLibros.size();
