@@ -3,11 +3,14 @@ package org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Alumno;
+import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Curso;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Libro;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Prestamo;
 
@@ -135,6 +138,37 @@ public class Prestamos {
 		
 		return prestamosFecha;
 	}
+	
+	
+	/**
+	 * Método que devolverá un mapa con los puntos obtenidos por cada curso en un mes dado.
+	 * @param fecha
+	 * @return estadisticasMensualesPorCurso
+	 */
+	public Map<Curso, Integer> getEstadisticaMensualPorCurso(LocalDate fecha) {
+		Map<Curso, Integer> estadisticasMensualesPorCurso = inicializarEstadisticas();
+		List<Prestamo> prestamosMensuales = get(fecha);
+		for (Prestamo prestamo : prestamosMensuales) {
+			Curso cursoAlumno = prestamo.getAlumno().getCurso();
+			estadisticasMensualesPorCurso.put(cursoAlumno, estadisticasMensualesPorCurso.get(cursoAlumno)
+					+ Math.round(prestamo.getPuntos()));
+		}
+		return estadisticasMensualesPorCurso;
+	}
+	
+	
+	/**
+	 * Método para inicializar las estadísticas.
+	 * @return mapa
+	 */
+	private Map<Curso, Integer> inicializarEstadisticas() {
+		Map<Curso, Integer> mapa = new EnumMap<>(Curso.class);
+		for (Curso curso : Curso.values()) {
+			mapa.put(curso, 0);
+		}
+		return mapa;
+	}
+	
 	
 	/**
 	 * Método que devuelve true o false si las fechas de préstamo son iguales o no.
