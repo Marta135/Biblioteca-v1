@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
@@ -15,22 +16,24 @@ public class Alumnos {
 	
 		
 	/*******CONSTRUCTORES*******/
-	
 	/**
-	 * Constructor con parámetros.
-	 * @param capacidad
+	 * Constructor sin parámetros.
 	 */
 	public Alumnos () throws NullPointerException, IllegalArgumentException {
 		coleccionAlumnos = new ArrayList<>();
 	}
 
+	
 	/**
 	 * Método que devuelve una copia profunda de la colección.
-	 * @return copiaProfundaAlumnos
+	 * @return alumnosOrdenados
 	 */
 	public List<Alumno> get() throws NullPointerException, IllegalArgumentException {
-		return copiaProfundaAlumnos();
+		List<Alumno> alumnosOrdenados = copiaProfundaAlumnos();
+		alumnosOrdenados.sort(Comparator.comparing(Alumno::getCorreo));
+		return alumnosOrdenados;
 	}
+	
 	
 	/**
 	 * Método que devuelve una copia de la colección de alumnos.
@@ -47,7 +50,7 @@ public class Alumnos {
 	
 	/**
 	 *  Método que devuelve el tamaño.
-	 * @return tamano
+	 * @return coleccionAlumnos.size()
 	 */
 	public int getTamano() {
 		return coleccionAlumnos.size();
