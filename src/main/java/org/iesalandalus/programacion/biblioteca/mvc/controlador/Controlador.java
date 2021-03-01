@@ -1,11 +1,14 @@
 package org.iesalandalus.programacion.biblioteca.mvc.controlador;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.Modelo;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Alumno;
+import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Curso;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Libro;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Prestamo;
 import org.iesalandalus.programacion.biblioteca.mvc.vista.Vista;
@@ -149,7 +152,7 @@ public class Controlador {
 	 * Método que llama a otro de la clase Modelo para mostrar los alumnos. 
 	 * @return alumnos
 	 */
-	public Alumno[] getAlumnos() {
+	public List<Alumno> getAlumnos() {
 		return modelo.getAlumnos();
 	}
 	
@@ -157,7 +160,7 @@ public class Controlador {
 	 * Método que llama a otro de la clase Modelo para mostrar los libros. 
 	 * @return libros
 	 */
-	public Libro[] getLibros() {
+	public List<Libro> getLibros() {
 		return modelo.getLibros();
 	}
 	
@@ -165,7 +168,7 @@ public class Controlador {
 	 * Método que llama a otro de la clase Modelo para mostrar los préstamos. 
 	 * @return prestamos
 	 */
-	public Prestamo[] getPrestamos() {
+	public List<Prestamo> getPrestamos() {
 		return modelo.getPrestamos();
 	}
 	
@@ -174,7 +177,7 @@ public class Controlador {
 	 * @param alumno
 	 * @return prestamos
 	 */
-	public Prestamo[] getPrestamos(Alumno alumno) {
+	public List<Prestamo> getPrestamos(Alumno alumno) {
 		return modelo.getPrestamos(alumno);
 	}
 	
@@ -183,7 +186,7 @@ public class Controlador {
 	 * @param libro
 	 * @return prestamos
 	 */
-	public Prestamo[] getPrestamos(Libro libro) {
+	public List<Prestamo> getPrestamos(Libro libro) {
 		return modelo.getPrestamos(libro);
 	}
 	
@@ -192,8 +195,16 @@ public class Controlador {
 	 * @param fecha
 	 * @return prestamos
 	 */
-	public Prestamo[] getPrestamos(LocalDate fechaPrestamo) {
+	public List<Prestamo> getPrestamos(LocalDate fechaPrestamo) {
 		return modelo.getPrestamos(fechaPrestamo);
 	}
 	
+	/**
+	 * Método que llama a otro de la clase Modelo para mostrar las estadísticas mensuales.
+	 * @param fecha
+	 * @return
+	 */
+	public Map<Curso, Integer> getEstadisticaMensualPorCurso(LocalDate fecha) {
+		return modelo.getEstadisticaMensualPorCurso(fecha);
+	}
 }

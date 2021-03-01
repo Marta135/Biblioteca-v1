@@ -1,9 +1,13 @@
 package org.iesalandalus.programacion.biblioteca.mvc.vista;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.biblioteca.mvc.controlador.Controlador;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Alumno;
+import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Curso;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Libro;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Prestamo;
 
@@ -98,10 +102,10 @@ public class Vista {
 	 */
 	public void listarAlumnos() {
 		Consola.mostrarCabecera("LISTADO DE ALUMNOS");
-		Alumno[] alumnos = controlador.getAlumnos();
-		if (alumnos[0] != null) {
+		List<Alumno> alumnos = controlador.getAlumnos();
+		if (!alumnos.isEmpty()) {
 			for (Alumno alumno : alumnos) {
-				if (alumnos != null) {
+				if (alumno != null) {
 					System.out.println(alumno);
 				}
 			}
@@ -158,10 +162,10 @@ public class Vista {
 	 */
 	public void listarLibros() {
 		Consola.mostrarCabecera("LISTADO DE LIBROS");
-		Libro[] libros = controlador.getLibros();
-		if (libros[0] != null) {
+		List<Libro> libros = controlador.getLibros();
+		if (!libros.isEmpty()) {
 			for (Libro libro : libros) {
-				if (libros != null) {
+				if (libro != null) {
 					System.out.println(libro);
 				}
 			}
@@ -230,8 +234,8 @@ public class Vista {
 	 */
 	public void listarPrestamos() {
 		Consola.mostrarCabecera("LISTADO DE PRÉSTAMOS");
-		Prestamo[] prestamos = controlador.getPrestamos();
-		if (prestamos[0] != null) {
+		List<Prestamo> prestamos = controlador.getPrestamos();
+		if (!prestamos.isEmpty()) {
 			for (Prestamo prestamo : prestamos) {
 				if (prestamo != null) {
 					System.out.println(prestamo);
@@ -247,8 +251,8 @@ public class Vista {
 	 */
 	public void listarPrestamosAlumno() {
 		Consola.mostrarCabecera("LISTADO DE PRÉSTAMOS POR ALUMNO");
-		Prestamo[] prestamos =  controlador.getPrestamos(Consola.leerAlumno());
-		if (prestamos[0] != null) {
+		List<Prestamo> prestamos =  controlador.getPrestamos(Consola.leerAlumno());
+		if (!prestamos.isEmpty()) {
 			for (Prestamo prestamo : prestamos) {
 				if (prestamo != null) {
 					System.out.println(prestamo);
@@ -264,8 +268,8 @@ public class Vista {
 	 */
 	public void listarPrestamosLibro() {
 		Consola.mostrarCabecera("LISTADO DE PRÉSTAMOS POR LIBRO");
-		Prestamo[] prestamos = controlador.getPrestamos(Consola.leerLibro());
-		if (prestamos[0] != null) {
+		List<Prestamo> prestamos = controlador.getPrestamos(Consola.leerLibro());
+		if (!prestamos.isEmpty()) {
 			for (Prestamo prestamo : prestamos) {
 				if (prestamo != null){
 					System.out.println(prestamo);
@@ -281,8 +285,8 @@ public class Vista {
 	 */
 	public void listarPrestamosFecha() {
 		Consola.mostrarCabecera("LISTADO DE PRÉSTAMOS POR FECHA");
-		Prestamo[] prestamos = controlador.getPrestamos(Consola.leerFecha());
-		if (prestamos[0] != null) {
+		List<Prestamo> prestamos = controlador.getPrestamos(Consola.leerFecha());
+		if (!prestamos.isEmpty()) {
 			for (Prestamo prestamo : prestamos) {
 				if (prestamo != null) {
 					System.out.println(prestamo);
@@ -290,6 +294,19 @@ public class Vista {
 			}
 		} else {
 			System.out.println("No hay préstamos de dicha fecha.");
+		}
+	}
+	
+	/**
+	 * Método que llama a otro para mostrar la estadística mensual por curso.
+	 */
+	public void mostrarEstadisticaMensualPorCurso() {
+		Consola.mostrarCabecera("ESTADÍSTICA MENSUAL POR CURSO");
+		Map<Curso, Integer> estadisticasMensualesPorCurso = controlador.getEstadisticaMensualPorCurso(Consola.leerFecha());
+		if (!estadisticasMensualesPorCurso.isEmpty()) {
+			System.out.println(estadisticasMensualesPorCurso);
+		} else {
+			System.out.println("No hay estadísticas mensuales a mostrar para ese mes");
 		}
 	}
 	

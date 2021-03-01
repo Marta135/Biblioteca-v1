@@ -1,10 +1,13 @@
 package org.iesalandalus.programacion.biblioteca.mvc.modelo;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Alumno;
+import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Curso;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Libro;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.dominio.Prestamo;
 import org.iesalandalus.programacion.biblioteca.mvc.modelo.negocio.Alumnos;
@@ -15,7 +18,6 @@ public class Modelo {
 
 	/*********ATRIBUTOS*********/
 	
-	private static final int CAPACIDAD = 50;
 	private Alumnos alumnos;
 	private Libros libros;
 	private Prestamos prestamos;
@@ -26,9 +28,9 @@ public class Modelo {
 	 * Constructor por defecto:
 	 */
 	public Modelo() {
-		alumnos = new Alumnos(CAPACIDAD);
-		libros = new Libros(CAPACIDAD);
-		prestamos = new Prestamos(CAPACIDAD);
+		alumnos = new Alumnos();
+		libros = new Libros();
+		prestamos = new Prestamos();
 	}
 	
 
@@ -118,6 +120,10 @@ public class Modelo {
 	 * @throws OperationNotSupportedException
 	 */
 	public void borrar(Alumno alumno) throws OperationNotSupportedException, IllegalArgumentException {
+		List<Prestamo> prestamosAlumno = prestamos.get(alumno);
+		for (Prestamo prestamo : prestamosAlumno) {
+			prestamos.borrar(prestamo);
+		}
 		alumnos.borrar(alumno);
 	}
 	
@@ -127,6 +133,10 @@ public class Modelo {
 	 * @throws OperationNotSupportedException
 	 */
 	public void borrar(Libro libro) throws OperationNotSupportedException, IllegalArgumentException {
+		List<Prestamo> prestamosLibro = prestamos.get(libro);
+		for (Prestamo prestamo : prestamosLibro) {
+			prestamos.borrar(prestamo);
+		}
 		libros.borrar(libro);
 	}
 	
@@ -143,7 +153,7 @@ public class Modelo {
 	 * Método que devuelve los datos de los alumnos.
 	 * @return alumnos
 	 */
-	public Alumno[] getAlumnos() {
+	public List<Alumno> getAlumnos() {
 		return alumnos.get();
 	}
 	
@@ -151,7 +161,7 @@ public class Modelo {
 	 * Método que devuelve los datos de los libros prestados.
 	 * @return libros
 	 */
-	public Libro[] getLibros() {
+	public List<Libro> getLibros() {
 		return libros.get();
 	}
 	
@@ -159,7 +169,7 @@ public class Modelo {
 	 * Método que devuelve todos los préstamos realizados.
 	 * @return prestamos
 	 */
-	public Prestamo[] getPrestamos() {
+	public List<Prestamo> getPrestamos() {
 		return prestamos.get();
 	}
 	
@@ -168,7 +178,7 @@ public class Modelo {
 	 * @param alumno
 	 * @return prestamos.get(alumno)
 	 */
-	public Prestamo[] getPrestamos(Alumno alumno) {
+	public List<Prestamo> getPrestamos(Alumno alumno) {
 		return prestamos.get(alumno);
 	}
 	
@@ -177,7 +187,7 @@ public class Modelo {
 	 * @param libro
 	 * @return prestamos.get(libro)
 	 */
-	public Prestamo[] getPrestamos(Libro libro) {
+	public List<Prestamo> getPrestamos(Libro libro) {
 		return prestamos.get(libro);
 	}
 	
@@ -186,10 +196,17 @@ public class Modelo {
 	 * @param fechaPrestamo
 	 * @return prestamos.get(fechaPrestamo)
 	 */
-	public Prestamo[] getPrestamos(LocalDate fechaPrestamo) {
+	public List<Prestamo> getPrestamos(LocalDate fechaPrestamo) {
 		return prestamos.get(fechaPrestamo);
 	}
 	
-	
+	/**
+	 * Método que devuelve la estadística mensual por curso.
+	 * @param fecha
+	 * @return
+	 */
+	public Map<Curso, Integer> getEstadisticaMensualPorCurso(LocalDate fecha) {
+		return prestamos.getEstadisticaMensualPorCurso(fecha);
+	}
 	
 }
